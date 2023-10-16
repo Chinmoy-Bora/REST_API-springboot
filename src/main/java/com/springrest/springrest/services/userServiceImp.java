@@ -4,6 +4,7 @@ package com.springrest.springrest.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.springrest.springrest.dao.UserDao;
@@ -15,7 +16,9 @@ public class userServiceImp implements userService {
 	@Autowired
 	private UserDao userdao;
 	//List<User> user;
-	
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 	
 	public userServiceImp()
 	{
@@ -41,6 +44,7 @@ public class userServiceImp implements userService {
 
 	@Override
 	public User addUser(User newuser) {
+		newuser.setPassword(passwordEncoder.encode(newuser.getPassword()));
 		userdao.save(newuser);
 		return newuser;
 	}

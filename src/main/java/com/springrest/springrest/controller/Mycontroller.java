@@ -4,12 +4,14 @@
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springrest.springrest.entities.Boat;
@@ -20,6 +22,7 @@ import com.springrest.springrest.services.boatmanService;
 import com.springrest.springrest.services.userService;
 
 @RestController 
+@RequestMapping("/dhun")
 public class Mycontroller {
 	
 	@Autowired
@@ -41,6 +44,31 @@ public class Mycontroller {
 	
 	// get the users
 
+	  @GetMapping("/welcome")
+	    public String welcome() {
+	        return "Welcome this endpoint is not secure";
+	    }
+
+	    @PostMapping(path="/new", consumes= "application/json")
+	    public User addNewUser(@RequestBody User newuser){
+	        return this.userservice.addUser(newuser);
+	    }
+
+	    @GetMapping("/all")
+	    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	    public List<User> getAllTheProducts() {
+	        return userservice.getuser();
+	    }
+
+//	    @GetMapping("/{id}")
+//	    @PreAuthorize("hasAuthority('ROLE_USER')")
+//	    public User getProductById(@PathVariable int id) {
+//	        return service.getProduct(id);
+//	    }
+	
+	
+	
+	///
 	@GetMapping("/user")
 	public List<User> getuser()
 	{
@@ -51,7 +79,6 @@ public class Mycontroller {
 	public User getUserId(@PathVariable String userId ) {
 		return this.userservice.getUserId(Long.parseLong(userId));
 	}
-	
 	
 	@PostMapping(path="/users",consumes= "application/json")
 	public User addUser(@RequestBody User newuser)
