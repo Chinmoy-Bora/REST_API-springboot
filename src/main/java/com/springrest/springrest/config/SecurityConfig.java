@@ -2,8 +2,10 @@ package com.springrest.springrest.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,20 +42,14 @@ public class SecurityConfig{
 //            .httpBasic();
 //    }
 	
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
-	{
-		return http.csrf().disable()
-				.authorizeRequests()
-				.requestMatchers().permitAll()
-				.and()
-				.authorizeRequests().regexMatchers("/user/**")
-				.authenticated()
-				.and().formLogin()
-				.and().build();
-		
-
-		
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	    return http.csrf(AbstractHttpConfigurer::disable)
+	            .authorizeHttpRequests(auth ->
+	                    auth.requestMatchers("/user").permitAll()
+	                            .requestMatchers("/user/**")
+	                            .authenticated()
+	            )
+	            .httpBasic(Customizer.withDefaults()).build();
 	}
 	
 
