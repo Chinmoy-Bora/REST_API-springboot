@@ -8,15 +8,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
-import com.springrest.springrest.service.UserInfoUserDetailService;
 
 
 
@@ -27,31 +22,24 @@ public class SecurityConfig{
 	
 	@Bean
 	
-	public UserDetailsService userDetailsService()
+	public UserDetailsService userDetailsService( PasswordEncoder encoder)
 	{
 //	    UserDetails admin= User.withUsername("Chinmoy")
 //	    		.password(encoder.encode("Pwd1"))
 //	    		.roles("ADMIN")
 //	    		.build();
 //	    return new InMemoryUserDetailsManager(admin);
-		return new UserInfoDetailsService();
+		return new UserUserDetailsService() ;
 	}
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.csrf().disable()
-//            .authorizeRequests()
-//            .antMatchers("/public/**").permitAll()
-//            .anyRequest().authenticated()
-//            .and()
-//            .httpBasic();
-//    }
+	
+	
 	
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 	    return http.csrf(AbstractHttpConfigurer::disable)
 	            .authorizeHttpRequests(auth ->
-	                    auth.requestMatchers("/dhun/user","/dhun/new").permitAll()
-	                            .requestMatchers("/dhun/**")
+	                    auth.requestMatchers("/users").permitAll()
+	                            .requestMatchers("/user/**")
 	                            .authenticated()
 	            )
 	            .httpBasic(Customizer.withDefaults()).build();
@@ -66,7 +54,7 @@ public class SecurityConfig{
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authenticationProvider=new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setUserDetailsService(userDetailsService(null));
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }

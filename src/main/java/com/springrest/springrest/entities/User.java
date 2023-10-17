@@ -29,6 +29,14 @@ public class User {
 	private String contact;
 	private String gender;
 	private String role;
+//	public String getName() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//	public String getPassword() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	}
 
