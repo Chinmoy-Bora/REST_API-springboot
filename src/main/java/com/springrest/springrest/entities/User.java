@@ -28,8 +28,8 @@ public class User {
 	private String email;
 	private String contact;
 	private String gender;
-	private String role;
-//	public String getName() {
+//	private String role;
+////	public String getName() {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}

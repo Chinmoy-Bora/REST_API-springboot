@@ -15,16 +15,17 @@ import com.springrest.springrest.entities.User;
 
 public class UserUserDetailsService implements UserDetailsService {
 	@Autowired
-	private UserDao userdao;
+	private UserDao repository;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
 		
-		Optional <User> user=userdao.findByName(username);
+		Optional <User> user=repository.findByUsername(username);
 		
 		return user.map(UserUserDetails::new)
-		    .orElseThrow();
+				.orElseThrow(() -> new UsernameNotFoundException("user not found " + username));
+		    
 		
 	}
 
